@@ -41,12 +41,21 @@ function Crimes(){
 }
 
 function DisplayCrimes({crimes, ethnicities}){
+  const [filterEthnicity, setFilterEthnicity] = React.useState(null);
+
+  const filterCrimes = filterEthnicity ? crimes.filter(crime => crime.self_defined_ethnicity === filterEthnicity) : crimes;
+
   return(
     <>
     {ethnicities.map(ethnicity => (
-      <button key={ethnicity}>{ethnicity}</button>
+      <button 
+          onClick={() => setFilterEthnicity(ethnicity)}
+          key={ethnicity}>{ethnicity}</button>
     ))}
-      <pre>{JSON.stringify(crimes, null, 2)}</pre>
+    {filterEthnicity && <button onClick={() => {
+      setFilterEthnicity(null);
+    }}>reset</button>}
+      <pre>{JSON.stringify(filterCrimes, null, 2)}</pre>
     </>
   );
 }
