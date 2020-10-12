@@ -1,7 +1,8 @@
 import React from 'react';
 import './App.css';
 import useSWR, {SWRConfig} from 'swr';
-
+import Button from '@material-ui/core/Button';
+import RestoreIcon from '@material-ui/icons/Restore';
 
 const fetcher = (...args) => fetch(...args).then(res => res.json());
 
@@ -37,7 +38,7 @@ function Crimes(){
   //with ... operator we cast set to array
   return <DisplayCrimes 
      crimes={data}
-     ethnicities={[...new Set(data.map(crime=> crime.self_defined_ethnicity))]}/>;
+     ethnicities={[...new Set(data.filter(crime => crime.self_defined_ethnicity != null).map(crime=> crime.self_defined_ethnicity))]}/>;
 }
 
 function DisplayCrimes({crimes, ethnicities}){
@@ -48,13 +49,13 @@ function DisplayCrimes({crimes, ethnicities}){
   return(
     <>
     {ethnicities.map(ethnicity => (
-      <button 
+      <Button size="small" variant="contained" color="primary"
           onClick={() => setFilterEthnicity(ethnicity)}
-          key={ethnicity}>{ethnicity}</button>
+          key={ethnicity}>{ethnicity}</Button>
     ))}
-    {filterEthnicity && <button onClick={() => {
+    {filterEthnicity && <Button startIcon={<RestoreIcon/>} size="small" color="secondary" variant="contained" onClick={() => {
       setFilterEthnicity(null);
-    }}>reset</button>}
+    }}>reset</Button>}
       <pre>{JSON.stringify(filterCrimes, null, 2)}</pre>
     </>
   );
