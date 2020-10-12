@@ -3,6 +3,9 @@ import './App.css';
 import useSWR, {SWRConfig} from 'swr';
 import Button from '@material-ui/core/Button';
 import RestoreIcon from '@material-ui/icons/Restore';
+import FilterIcon from '@material-ui/icons/Filter1';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 const fetcher = (...args) => fetch(...args).then(res => res.json());
 
@@ -48,14 +51,20 @@ function DisplayCrimes({crimes, ethnicities}){
 
   return(
     <>
-    {ethnicities.map(ethnicity => (
-      <Button size="small" variant="contained" color="primary"
-          onClick={() => setFilterEthnicity(ethnicity)}
-          key={ethnicity}>{ethnicity}</Button>
-    ))}
+    <List>
+      {ethnicities.map(ethnicity => (
+        <ListItem key={ethnicity}>
+          <Button endIcon={<FilterIcon />} size="small" variant="contained" color="primary"
+              onClick={() => setFilterEthnicity(ethnicity)}
+              key={ethnicity}>{ethnicity}</Button>
+        </ListItem>
+      ))}
+    </List>
     {filterEthnicity && <Button startIcon={<RestoreIcon/>} size="small" color="secondary" variant="contained" onClick={() => {
       setFilterEthnicity(null);
     }}>reset</Button>}
+    
+    
       <pre>{JSON.stringify(filterCrimes, null, 2)}</pre>
     </>
   );
