@@ -6,7 +6,7 @@ import RestoreIcon from '@material-ui/icons/Restore';
 import FilterIcon from '@material-ui/icons/Filter1';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import { ButtonGroup } from '@material-ui/core';
+import { ButtonGroup, Typography, Paper, Grid } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 
 const fetcher = (...args) => fetch(...args).then(res => res.json());
@@ -55,13 +55,16 @@ function Crimes(){
      ethnicities={[...new Set(data.filter(crime => crime.officer_defined_ethnicity != null).map(crime=> crime.officer_defined_ethnicity))]}/>;
 }
 
+//<pre>{JSON.stringify(filterCrimes, null, 2)}</pre>
+
 function DisplayCrimes({date, position, crimes, ethnicities}){
   const [filterEthnicity, setFilterEthnicity] = React.useState(null);
 
   const filterCrimes = filterEthnicity ? crimes.filter(crime => crime.officer_defined_ethnicity === filterEthnicity) : crimes;
-
+  let index = 0;
   return(
     <>
+    
     <List>
       <ListItem>
         <TextField value={date.date.toISOString().slice(0,10)} onChange={(event) => date.setDate(event.target.value)} type="date"></TextField>
@@ -86,7 +89,19 @@ function DisplayCrimes({date, position, crimes, ethnicities}){
         </ButtonGroup>
       </ListItem>
     </List>
-      <pre>{JSON.stringify(filterCrimes, null, 2)}</pre>
+    <Typography variant="subtitle1">
+      <span>Number of records: {filterCrimes && filterCrimes.length}</span>
+    </Typography>
+    <Grid container spacing={2}>
+      {filterCrimes && filterCrimes.map(element => (
+        
+          <Grid item key={index++}>
+            <Paper>{JSON.stringify(element, null, 2)}</Paper>
+          </Grid>
+        
+      ))}
+    </Grid>
+      
     </>
   );
 }
