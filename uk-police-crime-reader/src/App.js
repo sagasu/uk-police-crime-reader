@@ -20,12 +20,16 @@ export default function App() {
 function Crimes(){
   let [lat, setLat] = React.useState(51.464200);
   let [lng, setLng] = React.useState(-0.014957);
+  let d = new Date();
+  d.setMonth(d.getMonth() - 3); //3 months ago
+  let [date, setDate] = React.useState(d);
 
   let dataUrl = "https://data.police.uk/api/metropolitan/neighbourhoods";
   // let lat = 51.464200;
   // let lng = -0.014957;
-  let date = new Date();
-  let twoDigitMonth = ("0" + (new Date(date.getMonth() - 3).getMonth() + 1)).slice(-2);
+
+  date = new Date(date);
+  let twoDigitMonth = ("0" + (date.getMonth() + 1)).slice(-2);
   //lng and lat for Lewisham below
   // dataUrl = "https://data.police.uk/api/crimes-street/all-crime?lat=51.4415&lng=0.0117&date=2020-09";
   dataUrl = `https://data.police.uk/api/stops-street?lat=${lat}&lng=${lng}&date=${date.getFullYear()}-${twoDigitMonth}`;
@@ -45,12 +49,13 @@ function Crimes(){
   //we cast array that is a result of filtering to a Set to have a unique values (distinct)
   //with ... operator we cast set to array
   return <DisplayCrimes 
-     position={[lat, setLat, lng, setLng]}
+     position={{lat, setLat, lng, setLng}}
+     date={{date, setDate}}
      crimes={data}
      ethnicities={[...new Set(data.filter(crime => crime.officer_defined_ethnicity != null).map(crime=> crime.officer_defined_ethnicity))]}/>;
 }
 
-function DisplayCrimes({position, crimes, ethnicities}){
+function DisplayCrimes({date, position, crimes, ethnicities}){
   const [filterEthnicity, setFilterEthnicity] = React.useState(null);
 
   const filterCrimes = filterEthnicity ? crimes.filter(crime => crime.officer_defined_ethnicity === filterEthnicity) : crimes;
@@ -59,8 +64,11 @@ function DisplayCrimes({position, crimes, ethnicities}){
     <>
     <List>
       <ListItem>
-        <TextField value={position[0]} onChange={(event) => position[1](event.target.value)} label="latitude" type="number"></TextField>
-        <TextField value={position[2]} onChange={(event) => position[3](event.target.value)} label="longitude" type="number"></TextField>
+        <TextField value={date.date.toISOString().slice(0,10)} onChange={(event) => date.setDate(event.target.value)} type="date"></TextField>
+      </ListItem>
+      <ListItem>
+        <TextField value={position.lat} onChange={(event) => position.setLat(event.target.value)} label="latitude" type="number"></TextField>
+        <TextField value={position.lng} onChange={(event) => position.setLng(event.target.value)} label="longitude" type="number"></TextField>
       </ListItem>
 
       <ListItem>
