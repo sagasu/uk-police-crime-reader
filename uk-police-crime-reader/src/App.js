@@ -6,6 +6,7 @@ import RestoreIcon from '@material-ui/icons/Restore';
 import FilterIcon from '@material-ui/icons/Filter1';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import { ButtonGroup } from '@material-ui/core';
 
 const fetcher = (...args) => fetch(...args).then(res => res.json());
 
@@ -41,29 +42,29 @@ function Crimes(){
   //with ... operator we cast set to array
   return <DisplayCrimes 
      crimes={data}
-     ethnicities={[...new Set(data.filter(crime => crime.self_defined_ethnicity != null).map(crime=> crime.self_defined_ethnicity))]}/>;
+     ethnicities={[...new Set(data.filter(crime => crime.officer_defined_ethnicity != null).map(crime=> crime.officer_defined_ethnicity))]}/>;
 }
 
 function DisplayCrimes({crimes, ethnicities}){
   const [filterEthnicity, setFilterEthnicity] = React.useState(null);
 
-  const filterCrimes = filterEthnicity ? crimes.filter(crime => crime.self_defined_ethnicity === filterEthnicity) : crimes;
+  const filterCrimes = filterEthnicity ? crimes.filter(crime => crime.officer_defined_ethnicity === filterEthnicity) : crimes;
 
   return(
     <>
-    <List>
+    <ButtonGroup>
       {ethnicities.map(ethnicity => (
-        <ListItem key={ethnicity}>
+
           <Button endIcon={<FilterIcon />} size="small" variant="contained" color="primary"
               onClick={() => setFilterEthnicity(ethnicity)}
               key={ethnicity}>{ethnicity}</Button>
-        </ListItem>
+
       ))}
-    </List>
-    {filterEthnicity && <Button startIcon={<RestoreIcon/>} size="small" color="secondary" variant="contained" onClick={() => {
-      setFilterEthnicity(null);
-    }}>reset</Button>}
     
+      {filterEthnicity && <Button startIcon={<RestoreIcon/>} size="small" color="secondary" variant="contained" onClick={() => {
+        setFilterEthnicity(null);
+      }}>reset</Button>}
+    </ButtonGroup>
     
       <pre>{JSON.stringify(filterCrimes, null, 2)}</pre>
     </>
