@@ -8,6 +8,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import { ButtonGroup, Typography, Paper, Grid } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
+import 'fontsource-roboto';
 
 const fetcher = (...args) => fetch(...args).then(res => res.json());
 
@@ -92,7 +93,7 @@ function DisplayCrimes({date, position, crimes, ethnicities}){
     <Typography variant="subtitle1">
       <span>Number of records: {filterCrimes && filterCrimes.length}</span>
     </Typography>
-    <Grid container spacing={2}>
+    <Grid container spacing={2} justify="center">
       {filterCrimes && filterCrimes.map(element => (
         
           <Grid item key={index++}>
