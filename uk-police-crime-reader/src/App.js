@@ -26,12 +26,10 @@ function Crimes(){
   let [date, setDate] = React.useState(d);
 
   let dataUrl = "https://data.police.uk/api/metropolitan/neighbourhoods";
-  // let lat = 51.464200;
-  // let lng = -0.014957;
 
   date = new Date(date);
   let twoDigitMonth = ("0" + (date.getMonth() + 1)).slice(-2);
-  //lng and lat for Lewisham below
+  // lng and lat for Lewisham below
   // dataUrl = "https://data.police.uk/api/crimes-street/all-crime?lat=51.4415&lng=0.0117&date=2020-09";
   dataUrl = `https://data.police.uk/api/stops-street?lat=${lat}&lng=${lng}&date=${date.getFullYear()}-${twoDigitMonth}`;
   const {data, error} = useSWR(dataUrl);
@@ -55,8 +53,6 @@ function Crimes(){
      crimes={data}
      ethnicities={[...new Set(data.filter(crime => crime.officer_defined_ethnicity != null).map(crime=> crime.officer_defined_ethnicity))]}/>;
 }
-
-//<pre>{JSON.stringify(filterCrimes, null, 2)}</pre>
 
 function DisplayCrimes({date, position, crimes, ethnicities}){
   const [filterEthnicity, setFilterEthnicity] = React.useState(null);
